@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="The HTML5 Herald">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.10/angular.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript">
+        var app = angular.module('myApp', []);
+        app.factory('myService', function ($http) {
+            var myService = {
+                async: function () {
+                    var promise = $http.get('https://jsonplaceholder.typicode.com/users').then(function (response) {
+
+                        return response.data;
+                    });
+                    return promise;
+                }
+            };
+            return myService;
+        });
+
+        app.controller('MainCtrl', function (myService, $scope) {
+            myService.async().then(function (res) {
+                $scope.users = res;
+            });
+            $scope.userprofile = function (id) {
+                //debugger;
+                for (var i = 0; i <= $scope.users.length; i++) {
+                    if (id == $scope.users[i].id) {
+                        $scope.result = $scope.users[i];
+                    }
+                }
+
+            };
+
+        });
+    </script>
+</head>
+
+<body ng-app="myApp">
+    <div ng-controller="MainCtrl" id="maindiv">
+        <div>
+            <div class="form-group">
+                <select ng-model="myOption" class="form-control form-control-sm" id="sel1" ng-change="userprofile(myOption)">
+                        <option selected="selected" value="">--Select a user to display profile--</option>
+                    <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">FullName:</th>
+                        <td>{{result.name}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">UserName:</th>
+                        <td>{{result.username}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email:</th>
+                        <td>{{result.email}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Street:</th>
+                        <td>{{result.address.street}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Suite:</th>
+                        <td>{{result.address.suite}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">City:</th>
+                        <td>{{result.address.city}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">zipcode:</th>
+                        <td>{{result.address.zipcode}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">CompanyName:</th>
+                        <td>{{result.company.name}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Phone:</th>
+                        <td>{{result.phone}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Website:</th>
+                        <td>{{result.website}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
